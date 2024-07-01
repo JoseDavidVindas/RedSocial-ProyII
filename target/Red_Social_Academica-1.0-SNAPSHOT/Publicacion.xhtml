@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    
+    <h:body>
+        <div class="card">
+            <h:form>
+                <p:growl id="messages"/>
+               
+                <p:menubar>
+                    <p:submenu label="Mi Perfil" icon="pi pi-fw pi-user">
+                    </p:submenu>
+
+                    <p:submenu label="Foro" icon="pi pi-fw pi-users">
+                    </p:submenu>
+
+                    <p:submenu label="Chat" icon="pi pi-fw pi-comment">
+                    </p:submenu>
+                </p:menubar>
+
+                <!-- Botón redondo para abrir el diálogo -->
+                <p:commandButton icon="pi pi-plus" styleClass="rounded-button" style="margin-top: 20px; margin-left: 10px;" oncomplete="PF('dlg').show();"/>
+
+                <!-- Diálogo para crear publicación -->
+                <p:dialog header="Crear Publicación" widgetVar="dlg" modal="true" width="450" height="300">
+                    <h:panelGrid columns="1" cellpadding="5">
+                        <h:outputLabel for="description" value="Descripción:" />
+                        <p:inputTextarea id="description" value="#{publicacionController.descripcion}" rows="4" cols="40"/>
+
+                        <p:commandButton value="Publicar" actionListener="#{publicacionController.crearPublicacion}" oncomplete="PF('dlg').hide();" update="messages"/>
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+        </div>
+    </h:body>
+</html>

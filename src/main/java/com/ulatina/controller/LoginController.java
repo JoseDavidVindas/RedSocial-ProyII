@@ -7,14 +7,11 @@ package com.ulatina.controller;
 import com.ulatina.model.UsuarioTO;
 import com.ulatina.service.ServicioUsuario;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -26,7 +23,6 @@ import org.primefaces.PrimeFaces;
 public class LoginController implements Serializable {
 
     private UsuarioTO usuarioTO = new UsuarioTO();
-    private UsuarioTO selectedUsuario;
 
     public LoginController() {
     }
@@ -41,6 +37,10 @@ public class LoginController implements Serializable {
             FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Campos inválidos", "La clave o correo no son correctos"));
         }
     }
+    
+    public void registrar(){
+        this.redireccionar("/registro.xhtml");
+    }
 
     public void redireccionar(String ruta) {
         HttpServletRequest request;
@@ -52,28 +52,12 @@ public class LoginController implements Serializable {
         }
     }
 
-    public void openNew() {
-        this.selectedUsuario = new UsuarioTO();
-    }
-
-   
-    
-
     public UsuarioTO getUsuarioTO() {
         return usuarioTO;
     }
 
     public void setUsuarioTO(UsuarioTO usuarioTO) {
         this.usuarioTO = usuarioTO;
-    }
-
-
-    public UsuarioTO getSelectedUsuario() {
-        return selectedUsuario;
-    }
-
-    public void setSelectedUsuario(UsuarioTO selectedUsuario) {
-        this.selectedUsuario = selectedUsuario;
     }
 
 }

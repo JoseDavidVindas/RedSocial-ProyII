@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Registro de Usuario</title>
+    <style>
+        body {
+            background: url('https://cdn.pixabay.com/photo/2016/11/21/16/03/forest-1846391_960_720.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .registro-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 350px;
+        }
+        .user-image {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100px;
+            height: 100px;
+            background: url('https://img.icons8.com/clouds/100/000000/user.png') no-repeat center;
+            background-size: cover;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        .registro-panel h\:panelGrid {
+            width: 100%;
+        }
+        .registro-panel p\:inputText,
+        .registro-panel p\:password,
+        .registro-panel p\:selectOneMenu {
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</h:head>
+<h:body>
+    <h:form id="registroForm">
+        <div class="registro-panel">
+            <div class="user-image"></div>
+            <p:messages id="messages"/>
+            <h:panelGrid columns="2" cellpadding="5">
+                <h:outputLabel for="nombre" value="Nombre de Usuario: *"/>
+                <p:inputText id="nombre" value="#{registroController.usuario.nombre}" required="true" requiredMessage="El nombre de usuario es obligatorio." />
+
+                <h:outputLabel for="correo" value="Correo Electrónico: *"/>
+                <p:inputText id="correo" value="#{registroController.usuario.correo}" required="true" requiredMessage="El correo electrónico es obligatorio." >
+                    <f:validateRegex pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" />
+                </p:inputText>
+
+                <h:outputLabel for="clave" value="Contraseña: *"/>
+                <p:password id="clave" value="#{registroController.usuario.contrasena}" label="Contraseña" feedback="true" required="true" requiredMessage="La contraseña es obligatoria." weakLabel="Débil"
+                    goodLabel="Buena" strongLabel="Fuerte">
+
+                    <f:validateLength minimum="8"  />
+                </p:password>
+
+                <h:outputLabel for="rol" value="Rol: *"/>
+                <p:selectOneMenu id="rol" value="#{registroController.rol}" required="true" requiredMessage="El rol es obligatorio.">
+                    <f:selectItem itemLabel="Seleccione" itemValue=""/>
+                    <f:selectItem itemLabel="Estudiante" itemValue="Estudiante"/>
+                    <f:selectItem itemLabel="Profesor" itemValue="Profesor"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+            <div class="buttons">
+                <p:commandButton value="Volver" action="#{registroController.volver}" immediate="true"/>
+                <p:commandButton value="Registrar" action="#{registroController.registrarUsuario}" update="messages"/>
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>
+

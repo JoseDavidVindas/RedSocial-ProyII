@@ -6,3 +6,4 @@ com\ulatina\service\ServicioUsuario.class
 com\ulatina\model\Publicacion.class
 com\ulatina\service\Servicio.class
 com\ulatina\controller\PublicacionController.class
+com\ulatina\controller\RegistroController.class

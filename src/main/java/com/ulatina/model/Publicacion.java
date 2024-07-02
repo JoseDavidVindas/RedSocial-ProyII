@@ -4,12 +4,15 @@
  */
 package com.ulatina.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author josem
  */
-public class Publicacion {
+public class Publicacion implements Serializable{
     
+    private int id;
     private String descripcion;
     private int idUsuario;
     private String imagen;
@@ -28,6 +31,14 @@ public class Publicacion {
         this.favoritos = favoritos;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public String getDescripcion() {
         return descripcion;
     }

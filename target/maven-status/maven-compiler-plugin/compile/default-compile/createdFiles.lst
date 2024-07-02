@@ -1,5 +1,8 @@
-com\ulatina\model\Publicacion.class
 com\ulatina\service\CRUD.class
-com\ulatina\service\Servicio.class
+com\ulatina\model\UsuarioTO.class
+com\ulatina\controller\LoginController.class
 com\ulatina\service\ServicioPublicacion.class
+com\ulatina\service\ServicioUsuario.class
+com\ulatina\model\Publicacion.class
+com\ulatina\service\Servicio.class
 com\ulatina\controller\PublicacionController.class

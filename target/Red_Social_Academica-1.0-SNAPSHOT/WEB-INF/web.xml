@@ -25,7 +25,7 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>Publicacion.xhtml</welcome-file>
+        <welcome-file>IniciarSesion.xhtml</welcome-file>
     </welcome-file-list>
 </web-app>
 

@@ -18,7 +18,7 @@ import org.primefaces.PrimeFaces;
 
 /**
  *
- * @author Usuario
+ * @author Jefferson
  */
 @ManagedBean(name = "loginController")
 @SessionScoped

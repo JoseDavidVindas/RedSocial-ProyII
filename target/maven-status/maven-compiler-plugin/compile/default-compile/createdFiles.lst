@@ -4,6 +4,7 @@ com\ulatina\controller\LoginController.class
 com\ulatina\service\ServicioPublicacion.class
 com\ulatina\service\ServicioUsuario.class
 com\ulatina\model\Publicacion.class
+com\ulatina\model\Rol.class
 com\ulatina\service\Servicio.class
 com\ulatina\controller\PublicacionController.class
 com\ulatina\controller\RegistroController.class

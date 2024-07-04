@@ -5,31 +5,40 @@
 package com.ulatina.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  *
  * @author josem
  */
-public class Publicacion implements Serializable{
+public class Publicacion implements Serializable {
+
+    private int id; 
+    private String descripcion; 
+    private int usuario_id; // 
+    private Timestamp fecha_publicacion; 
+    private Timestamp fecha_actualizacion; 
+    private String imagen_url; 
+    private String documento_url; 
+    private int numero_favoritos; 
     
-    private int id;
-    private String descripcion;
-    private int idUsuario;
-    private String imagen;
-    private String documento;
-    private int favoritos;
-    
-    public Publicacion(){
-        
+
+    // Constructor vacío
+    public Publicacion() {
     }
 
-    public Publicacion(String descripcion, int idUsuario, String imagen, String documento, int favoritos) {
-        this.descripcion = descripcion;
-        this.idUsuario = idUsuario;
-        this.imagen = imagen;
-        this.documento = documento;
-        this.favoritos = favoritos;
+    // Constructor con parámetros
+    public Publicacion(String Descripcion, int usuarioId, Timestamp fechaPublicacion, Timestamp fechaActualizacion, String imagenUrl, String documentoUrl, int numeroFavoritos) {
+        this.descripcion = Descripcion;
+        this.usuario_id = usuarioId;
+        this.fecha_publicacion = fechaPublicacion;
+        this.fecha_actualizacion = fechaActualizacion;
+        this.imagen_url = imagenUrl;
+        this.documento_url = documentoUrl;
+        this.numero_favoritos = numeroFavoritos;
     }
+
+    // Getters y Setters
 
     public int getId() {
         return id;
@@ -38,7 +47,7 @@ public class Publicacion implements Serializable{
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -47,37 +56,54 @@ public class Publicacion implements Serializable{
         this.descripcion = descripcion;
     }
 
-    public int getIdUsuario() {
-        return idUsuario;
+    public int getUsuario_id() {
+        return usuario_id;
     }
 
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuario_id(int usuario_id) {
+        this.usuario_id = usuario_id;
     }
 
-    public String getImagen() {
-        return imagen;
+    public Timestamp getFecha_publicacion() {
+        return fecha_publicacion;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
+    public void setFecha_publicacion(Timestamp fecha_publicacion) {
+        this.fecha_publicacion = fecha_publicacion;
     }
 
-    public String getDocumento() {
-        return documento;
+    public Timestamp getFecha_actualizacion() {
+        return fecha_actualizacion;
     }
 
-    public void setDocumento(String documento) {
-        this.documento = documento;
+    public void setFecha_actualizacion(Timestamp fecha_actualizacion) {
+        this.fecha_actualizacion = fecha_actualizacion;
     }
 
-    public int getFavoritos() {
-        return favoritos;
+    public String getImagen_url() {
+        return imagen_url;
     }
 
-    public void setFavoritos(int favoritos) {
-        this.favoritos = favoritos;
+    public void setImagen_url(String imagen_url) {
+        this.imagen_url = imagen_url;
     }
+
+    public String getDocumento_url() {
+        return documento_url;
+    }
+
+    public void setDocumento_url(String documento_url) {
+        this.documento_url = documento_url;
+    }
+
+    public int getNumero_favoritos() {
+        return numero_favoritos;
+    }
+
+    public void setNumero_favoritos(int numero_favoritos) {
+        this.numero_favoritos = numero_favoritos;
+    }
+   
     
-    
+
 }

@@ -4,12 +4,33 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Publicaciones</title>
+        <style>
+            .right-align {
+                text-align: right;
+                display: block;
+                width: 100%;
+            }
+            .left-align {
+                text-align: left;
+                display: block;
+                width: 100%;
+            }
+            .publication-panel {
+                margin-bottom: 15px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+            .publication-description {
+                font-weight: bold;
+            }
+        </style>
     </h:head>
     
     <h:body>
         <div class="card">
-            <h:form>
+            <h:form id="mainForm">
                 <p:growl id="messages"/>
                
                 <p:menubar>
@@ -32,9 +53,47 @@
                         <h:outputLabel for="description" value="Descripción:" />
                         <p:inputTextarea id="description" value="#{publicacionController.descripcion}" rows="4" cols="40"/>
 
-                        <p:commandButton value="Publicar" actionListener="#{publicacionController.crearPublicacion}" oncomplete="PF('dlg').hide();" update="messages"/>
+                        <p:commandButton value="Publicar" actionListener="#{publicacionController.crearPublicacion}" oncomplete="PF('dlg').hide();" update="messages publicaciones"/>
                     </h:panelGrid>
                 </p:dialog>
+                
+                <!-- Lista de publicaciones -->
+                <h:panelGroup id="publicaciones">
+                    <p:dataList value="#{publicacionController.publicaciones}" var="publicacion" itemType="Publicacion" paginator="true" rows="10">
+                        <p:panel styleClass="publication-panel">
+                            <!-- Para mostrar la descripción de la publicación -->
+                            <h:outputText value="#{publicacion.descripcion}" styleClass="publication-description" />
+                            <br />
+                            <!-- Con esto se muestra la URL de la imagen, si está disponible -->
+                            <p:graphicImage value="#{publicacion.imagen_url}" rendered="#{not empty publicacion.imagen_url}" />
+                            <br />
+                            <!-- Con esto se muestra la fecha de publicación alineada a la derecha -->
+                            <h:panelGroup styleClass="right-align">
+                                <h:outputText value="Fecha de publicación: #{publicacion.fecha_publicacion}" />
+                            </h:panelGroup>
+                            <br />
+                            <!-- Con esto se muestra la fecha de actualización alineada a la derecha -->
+                            <h:panelGroup styleClass="right-align">
+                                <h:outputText value="Fecha de actualización: #{publicacion.fecha_actualizacion}" />
+                            </h:panelGroup>
+                            <br />
+                            <!-- Botón para ver el documento, si está disponible -->
+                            <h:commandLink value="Ver documento" action="#{publicacionController.verDocumento(publicacion.documento_url)}" rendered="#{not empty publicacion.documento_url}" />
+                            <!-- Botón para descargar el documento, si está disponible -->
+                            <h:commandButton value="Descargar documento" action="#{publicacionController.descargarDocumento(publicacion.documento_url)}" rendered="#{not empty publicacion.documento_url}" />
+                            <br />
+                            <!-- Aquí se muestra el número de favoritos alineado a la izquierda -->
+                            <h:panelGroup styleClass="left-align">
+                                <h:outputText value="Número de favoritos: #{publicacion.numero_favoritos}" />
+                            </h:panelGroup>
+                            <br />
+                            <!-- Botón de favoritos -->
+                            <p:commandButton icon="pi pi-star" value="Favorito" />
+                        </p:panel>
+                    </p:dataList>
+                    <!-- Botón para cargar más publicaciones -->
+                    <p:commandButton value="Cargar más" action="#{publicacionController.loadMore}" update="publicaciones"/>
+                </h:panelGroup>
             </h:form>
         </div>
     </h:body>

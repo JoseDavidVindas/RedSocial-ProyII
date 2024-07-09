@@ -45,14 +45,14 @@ public class PublicacionController {
         try {
             publicacion = new Publicacion();
             publicacion.setDescripcion(descripcion);
-            publicacion.setUsuario_id(loginController.getUsuarioTO().getId());
+            publicacion.setUsuario(loginController.getUsuarioTO());
 
             if (!servPublicacion.insertar(publicacion)) {
                 descripcion = "";
                 FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo realizar la publicacion"));
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Publicacion creada satisfactoriamente"));
-               // cargarPublicaciones(); // Actualiza la lista de publicaciones
+               cargarPublicaciones(); // Actualiza la lista de publicaciones
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -15,7 +15,7 @@ public class Publicacion implements Serializable {
 
     private int id; 
     private String descripcion; 
-    private int usuario_id; // 
+    private UsuarioTO usuario; // 
     private Timestamp fecha_publicacion; 
     private Timestamp fecha_actualizacion; 
     private String imagen_url; 
@@ -28,15 +28,18 @@ public class Publicacion implements Serializable {
     }
 
     // Constructor con parámetros
-    public Publicacion(String Descripcion, int usuarioId, Timestamp fechaPublicacion, Timestamp fechaActualizacion, String imagenUrl, String documentoUrl, int numeroFavoritos) {
-        this.descripcion = Descripcion;
-        this.usuario_id = usuarioId;
-        this.fecha_publicacion = fechaPublicacion;
-        this.fecha_actualizacion = fechaActualizacion;
-        this.imagen_url = imagenUrl;
-        this.documento_url = documentoUrl;
-        this.numero_favoritos = numeroFavoritos;
+
+    public Publicacion(int id, String descripcion, UsuarioTO usuario, Timestamp fecha_publicacion, Timestamp fecha_actualizacion, String imagen_url, String documento_url, int numero_favoritos) {
+        this.id = id;
+        this.descripcion = descripcion;
+        this.usuario = usuario;
+        this.fecha_publicacion = fecha_publicacion;
+        this.fecha_actualizacion = fecha_actualizacion;
+        this.imagen_url = imagen_url;
+        this.documento_url = documento_url;
+        this.numero_favoritos = numero_favoritos;
     }
+    
 
     // Getters y Setters
 
@@ -56,13 +59,15 @@ public class Publicacion implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public int getUsuario_id() {
-        return usuario_id;
+    public UsuarioTO getUsuario() {
+        return usuario;
     }
 
-    public void setUsuario_id(int usuario_id) {
-        this.usuario_id = usuario_id;
+    public void setUsuario(UsuarioTO usuario) {
+        this.usuario = usuario;
     }
+    
+    
 
     public Timestamp getFecha_publicacion() {
         return fecha_publicacion;

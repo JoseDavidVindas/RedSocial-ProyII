@@ -5,6 +5,7 @@
 package com.ulatina.service;
 
 import com.ulatina.model.Publicacion;
+import com.ulatina.model.UsuarioTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,7 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
             String sql = "INSERT INTO publicacion (descripcion,usuario_id,imagen_url,documento_url,numero_favoritos) VALUES (?,?,?,?,?)";
             stmt = getConexion().prepareStatement(sql);
             stmt.setString(1, t.getDescripcion());
-            stmt.setInt(2, t.getUsuario_id());
+            stmt.setInt(2, t.getUsuario().getId());
             stmt.setString(3, t.getImagen_url());
             stmt.setString(4, t.getDocumento_url());
             stmt.setInt(5, t.getNumero_favoritos());
@@ -76,6 +77,8 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
         List<Publicacion> publicaciones = new ArrayList<>();
         ResultSet rs = null;
         PreparedStatement stmt = null;
+        ServicioUsuario servUsuario = new ServicioUsuario();
+        
 
         try {
             Conectar();
@@ -93,7 +96,7 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
                 Publicacion publicacion = new Publicacion();
                 publicacion.setId(rs.getInt("id"));
                 publicacion.setDescripcion(rs.getString("descripcion"));
-                publicacion.setUsuario_id(rs.getInt("usuario_id"));
+                publicacion.setUsuario(servUsuario.usuarioPK(rs.getInt("usuario_id")));
                 publicacion.setFecha_publicacion(rs.getTimestamp("fecha_publicacion"));
                 publicacion.setFecha_actualizacion(rs.getTimestamp("fecha_actualizacion"));
                 publicacion.setImagen_url(rs.getString("imagen_url"));

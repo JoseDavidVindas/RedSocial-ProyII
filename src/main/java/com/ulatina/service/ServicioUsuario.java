@@ -88,6 +88,41 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO>{
         }
     }
 
+    public UsuarioTO usuarioPK(int idU){
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        UsuarioTO usuarioTORetorno = null;
+        
+        try {
+            
+            Conectar();
+            
+            String sql = "SELECT * FROM usuario WHERE id = ?";
+            stmt = getConexion().prepareStatement(sql);
+            stmt.setInt(1, idU);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String mail = rs.getString("correo");
+                String nom = rs.getString("nombre");
+                int rol = rs.getInt("rol_id");
+                String pass = rs.getString("contrasena");
+               
+                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //Paso 5
+            CerrarResultSet(rs);
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+        return usuarioTORetorno;
+    }
+    
     @Override
     public Boolean modificar(UsuarioTO t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

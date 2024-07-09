@@ -1,4 +1,3 @@
-<?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
@@ -46,6 +45,15 @@
                 justify-content: center;
                 align-items: center;
             }
+            .icon-button {
+                background-color: transparent;
+                border: none;
+                color: #ffffff;
+                cursor: pointer;
+                font-size: 16px;
+                padding: 5px;
+                margin: 2px;
+            }
         </style>
     </h:head>
     
@@ -85,6 +93,9 @@
                             <!-- Para mostrar la descripción de la publicación -->
                             <h:outputText value="#{publicacion.descripcion}" styleClass="publication-description" />
                             <br />
+                            <!-- Para mostrar el nombre del usuario que hizo la publicación -->
+                            <h:outputText value="Publicado por: #{publicacion.usuario.nombre}" styleClass="publication-user" />
+                            <br />
                             <!-- Con esto se muestra la URL de la imagen, si está disponible -->
                             <p:graphicImage value="#{publicacion.imagen_url}" rendered="#{not empty publicacion.imagen_url}" />
                             <br />
@@ -99,9 +110,9 @@
                             </h:panelGroup>
                             <br />
                             <!-- Botón para ver el documento, si está disponible -->
-                            <h:commandLink value="Ver documento" action="#{publicacionController.verDocumento(publicacion.documento_url)}" rendered="#{not empty publicacion.documento_url}" />
+                            <p:commandButton icon="pi pi-eye" styleClass="icon-button" action="#{publicacionController.verDocumento(publicacion.documento_url)}" rendered="#{not empty publicacion.documento_url}" />
                             <!-- Botón para descargar el documento, si está disponible -->
-                            <h:commandButton value="Descargar documento" action="#{publicacionController.descargarDocumento(publicacion.documento_url)}" rendered="#{not empty publicacion.documento_url}" />
+                            <p:commandButton icon="pi pi-download" styleClass="icon-button" action="#{publicacionController.descargarDocumento(publicacion.documento_url)}" rendered="#{not empty publicacion.documento_url}" />
                             <br />
                             <!-- Aquí se muestra el número de favoritos alineado a la izquierda -->
                             <h:panelGroup styleClass="left-align">

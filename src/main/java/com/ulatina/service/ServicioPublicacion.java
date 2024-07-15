@@ -27,13 +27,11 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
         try{
             Conectar();
             
-            String sql = "INSERT INTO publicacion (descripcion,usuario_id,imagen_url,documento_url,numero_favoritos) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO publicacion (descripcion,usuario_id,numero_favoritos) VALUES (?,?,?)";
             stmt = getConexion().prepareStatement(sql);
             stmt.setString(1, t.getDescripcion());
             stmt.setInt(2, t.getUsuario().getId());
-            stmt.setString(3, t.getImagen_url());
-            stmt.setString(4, t.getDocumento_url());
-            stmt.setInt(5, t.getNumero_favoritos());
+            stmt.setInt(3, t.getNumero_favoritos());
             
             int filasInsertadas = stmt.executeUpdate();
             
@@ -82,7 +80,7 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
 
         try {
             Conectar();
-            String query = "SELECT id, descripcion, usuario_id, fecha_publicacion, fecha_actualizacion, imagen_url, documento_url, numero_favoritos "
+            String query = "SELECT id, descripcion, usuario_id, fecha_publicacion, fecha_actualizacion,numero_favoritos "
                     + "FROM publicacion "
                     + "ORDER BY fecha_publicacion DESC "
                     + "LIMIT ?, ?";
@@ -99,8 +97,6 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
                 publicacion.setUsuario(servUsuario.usuarioPK(rs.getInt("usuario_id")));
                 publicacion.setFecha_publicacion(rs.getTimestamp("fecha_publicacion"));
                 publicacion.setFecha_actualizacion(rs.getTimestamp("fecha_actualizacion"));
-                publicacion.setImagen_url(rs.getString("imagen_url"));
-                publicacion.setDocumento_url(rs.getString("documento_url"));
                 publicacion.setNumero_favoritos(rs.getInt("numero_favoritos"));
                 publicaciones.add(publicacion);
             }

@@ -6,6 +6,7 @@ package com.ulatina.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *
@@ -18,9 +19,8 @@ public class Publicacion implements Serializable {
     private UsuarioTO usuario; // 
     private Timestamp fecha_publicacion; 
     private Timestamp fecha_actualizacion; 
-    private String imagen_url; 
-    private String documento_url; 
     private int numero_favoritos; 
+    private List<Archivo> archivo;
     
 
     // Constructor vacío
@@ -29,17 +29,15 @@ public class Publicacion implements Serializable {
 
     // Constructor con parámetros
 
-    public Publicacion(int id, String descripcion, UsuarioTO usuario, Timestamp fecha_publicacion, Timestamp fecha_actualizacion, String imagen_url, String documento_url, int numero_favoritos) {
+    public Publicacion(int id, String descripcion, UsuarioTO usuario, Timestamp fecha_publicacion, Timestamp fecha_actualizacion, int numero_favoritos, List<Archivo> archivo) {
         this.id = id;
         this.descripcion = descripcion;
         this.usuario = usuario;
         this.fecha_publicacion = fecha_publicacion;
         this.fecha_actualizacion = fecha_actualizacion;
-        this.imagen_url = imagen_url;
-        this.documento_url = documento_url;
         this.numero_favoritos = numero_favoritos;
+        this.archivo = archivo;
     }
-    
 
     // Getters y Setters
 
@@ -66,8 +64,6 @@ public class Publicacion implements Serializable {
     public void setUsuario(UsuarioTO usuario) {
         this.usuario = usuario;
     }
-    
-    
 
     public Timestamp getFecha_publicacion() {
         return fecha_publicacion;
@@ -84,29 +80,20 @@ public class Publicacion implements Serializable {
     public void setFecha_actualizacion(Timestamp fecha_actualizacion) {
         this.fecha_actualizacion = fecha_actualizacion;
     }
-
-    public String getImagen_url() {
-        return imagen_url;
-    }
-
-    public void setImagen_url(String imagen_url) {
-        this.imagen_url = imagen_url;
-    }
-
-    public String getDocumento_url() {
-        return documento_url;
-    }
-
-    public void setDocumento_url(String documento_url) {
-        this.documento_url = documento_url;
-    }
-
     public int getNumero_favoritos() {
         return numero_favoritos;
     }
 
     public void setNumero_favoritos(int numero_favoritos) {
         this.numero_favoritos = numero_favoritos;
+    }
+
+    public List<Archivo> getArchivo() {
+        return archivo;
+    }
+
+    public void setArchivo(List<Archivo> archivo) {
+        this.archivo = archivo;
     }
    
     

@@ -97,7 +97,7 @@
                             <h:outputText value="Publicado por: #{publicacion.usuario.nombre}" styleClass="publication-user" />
                             <br />
                             <!-- Con esto se muestra la URL de la imagen, si está disponible -->
-                            <p:graphicImage value="#{publicacion.imagen_url}" rendered="#{not empty publicacion.imagen_url}" />
+                            <p:graphicImage value="#{publicacion.archivo}" rendered="#{not empty publicacion.archivo}" />
                             <br />
                             <!-- Con esto se muestra la fecha de publicación alineada a la derecha -->
                             <h:panelGroup styleClass="right-align">
@@ -110,9 +110,9 @@
                             </h:panelGroup>
                             <br />
                             <!-- Botón para ver el documento, si está disponible -->
-                            <p:commandButton icon="pi pi-eye" styleClass="icon-button" action="#{publicacionController.verDocumento(publicacion.documento_url)}" rendered="#{not empty publicacion.documento_url}" />
+                            <p:commandButton icon="pi pi-eye" styleClass="icon-button" action="#{publicacionController.verDocumento(publicacion.archivo)}" rendered="#{not empty publicacion.archivo}" />
                             <!-- Botón para descargar el documento, si está disponible -->
-                            <p:commandButton icon="pi pi-download" styleClass="icon-button" action="#{publicacionController.descargarDocumento(publicacion.documento_url)}" rendered="#{not empty publicacion.documento_url}" />
+                            <p:commandButton icon="pi pi-download" styleClass="icon-button" action="#{publicacionController.descargarDocumento(publicacion.archivo)}" rendered="#{not empty publicacion.archivo}" />
                             <br />
                             <!-- Aquí se muestra el número de favoritos alineado a la izquierda -->
                             <h:panelGroup styleClass="left-align">

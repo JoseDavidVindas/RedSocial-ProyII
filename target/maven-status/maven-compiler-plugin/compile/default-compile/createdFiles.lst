@@ -1,11 +1,13 @@
 com\ulatina\service\CRUD.class
 com\ulatina\model\UsuarioTO.class
-com\ulatina\controller\LoginController.class
 com\ulatina\service\ServicioPublicacion.class
 com\ulatina\service\ServicioUsuario.class
+com\ulatina\service\Servicio.class
+com\ulatina\service\ServicioArchivo.class
+com\ulatina\controller\RegistroController.class
+com\ulatina\controller\LoginController.class
+com\ulatina\controller\PruebaController.class
 com\ulatina\model\Publicacion.class
 com\ulatina\model\Archivo.class
 com\ulatina\model\Rol.class
-com\ulatina\service\Servicio.class
 com\ulatina\controller\PublicacionController.class
-com\ulatina\controller\RegistroController.class

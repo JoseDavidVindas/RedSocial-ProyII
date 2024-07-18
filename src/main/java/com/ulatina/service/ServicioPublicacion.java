@@ -4,11 +4,12 @@
  */
 package com.ulatina.service;
 
+import com.ulatina.model.Archivo;
 import com.ulatina.model.Publicacion;
-import com.ulatina.model.UsuarioTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +24,13 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
     public Boolean insertar(Publicacion t) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        ServicioArchivo servA = new ServicioArchivo();
         
         try{
             Conectar();
             
             String sql = "INSERT INTO publicacion (descripcion,usuario_id,numero_favoritos) VALUES (?,?,?)";
-            stmt = getConexion().prepareStatement(sql);
+            stmt = getConexion().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, t.getDescripcion());
             stmt.setInt(2, t.getUsuario().getId());
             stmt.setInt(3, t.getNumero_favoritos());
@@ -36,6 +38,17 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
             int filasInsertadas = stmt.executeUpdate();
             
             if(filasInsertadas >0){
+                rs = stmt.getGeneratedKeys();
+                if(rs.next()){
+                    int usuarioId = rs.getInt(1);
+                    t.setId(usuarioId);
+                    if (t.getArchivo() != null) {
+                        for (Archivo archivo : t.getArchivo()) {
+                            archivo.setPublicacion(t);
+                            servA.insertar(archivo);
+                        }
+                    }
+                }
                 return true;
             }else{
                 return false;

@@ -20,7 +20,8 @@ public class Publicacion implements Serializable {
     private Timestamp fecha_publicacion; 
     private Timestamp fecha_actualizacion; 
     private int numero_favoritos; 
-    private List<Archivo> archivo;
+    private List<Documento> documentos;
+    private List<Imagen> imagenes;
     
 
     // Constructor vacío
@@ -29,15 +30,18 @@ public class Publicacion implements Serializable {
 
     // Constructor con parámetros
 
-    public Publicacion(int id, String descripcion, UsuarioTO usuario, Timestamp fecha_publicacion, Timestamp fecha_actualizacion, int numero_favoritos, List<Archivo> archivo) {
+    public Publicacion(int id, String descripcion, UsuarioTO usuario, Timestamp fecha_publicacion, Timestamp fecha_actualizacion, int numero_favoritos, List<Documento> documentos, List<Imagen> imagenes) {
         this.id = id;
         this.descripcion = descripcion;
         this.usuario = usuario;
         this.fecha_publicacion = fecha_publicacion;
         this.fecha_actualizacion = fecha_actualizacion;
         this.numero_favoritos = numero_favoritos;
-        this.archivo = archivo;
+        this.documentos = documentos;
+        this.imagenes = imagenes;
     }
+
+    
 
     // Getters y Setters
 
@@ -88,13 +92,23 @@ public class Publicacion implements Serializable {
         this.numero_favoritos = numero_favoritos;
     }
 
-    public List<Archivo> getArchivo() {
-        return archivo;
+    public List<Documento> getDocumentos() {
+        return documentos;
     }
 
-    public void setArchivo(List<Archivo> archivo) {
-        this.archivo = archivo;
+    public void setDocumentos(List<Documento> documentos) {
+        this.documentos = documentos;
     }
+
+    public List<Imagen> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<Imagen> imagenes) {
+        this.imagenes = imagenes;
+    }
+
+    
    
     
 

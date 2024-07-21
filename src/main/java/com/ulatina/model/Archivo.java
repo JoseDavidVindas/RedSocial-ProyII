@@ -10,21 +10,19 @@ import java.io.Serializable;
  *
  * @author josem
  */
-public class Archivo implements Serializable{
+public class Archivo {
     
     private int id;
     private String url;
     private Publicacion publicacion;
-    private String tipo;
 
     public Archivo() {
     }
 
-    public Archivo(int id, String url, Publicacion publicacion, String tipo) {
+    public Archivo(int id, String url, Publicacion publicacion) {
         this.id = id;
         this.url = url;
         this.publicacion = publicacion;
-        this.tipo = tipo;
     }
 
     public Publicacion getPublicacion() {
@@ -50,15 +48,5 @@ public class Archivo implements Serializable{
     public void setUrl(String url) {
         this.url = url;
     }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-    
-    
     
 }

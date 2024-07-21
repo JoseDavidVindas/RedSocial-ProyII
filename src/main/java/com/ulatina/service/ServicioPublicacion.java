@@ -5,6 +5,8 @@
 package com.ulatina.service;
 
 import com.ulatina.model.Archivo;
+import com.ulatina.model.Documento;
+import com.ulatina.model.Imagen;
 import com.ulatina.model.Publicacion;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,46 +20,52 @@ import java.util.Optional;
  *
  * @author josem
  */
-public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
+public class ServicioPublicacion extends Servicio implements CRUD<Publicacion> {
 
     @Override
     public Boolean insertar(Publicacion t) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         ServicioArchivo servA = new ServicioArchivo();
-        
-        try{
+
+        try {
             Conectar();
-            
+
             String sql = "INSERT INTO publicacion (descripcion,usuario_id,numero_favoritos) VALUES (?,?,?)";
-            stmt = getConexion().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+            stmt = getConexion().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, t.getDescripcion());
             stmt.setInt(2, t.getUsuario().getId());
             stmt.setInt(3, t.getNumero_favoritos());
-            
+
             int filasInsertadas = stmt.executeUpdate();
-            
-            if(filasInsertadas >0){
+
+            if (filasInsertadas > 0) {
                 rs = stmt.getGeneratedKeys();
-                if(rs.next()){
+                if (rs.next()) {
                     int usuarioId = rs.getInt(1);
                     t.setId(usuarioId);
-                    if (t.getArchivo() != null) {
-                        for (Archivo archivo : t.getArchivo()) {
-                            archivo.setPublicacion(t);
-                            servA.insertar(archivo);
+                    if (t.getDocumentos() != null) {
+                        for (Documento documento : t.getDocumentos()) {
+                            documento.setPublicacion(t);
+                            servA.insertarDocumento(documento);
+                        }
+                    }
+                    if (t.getImagenes() != null) {
+                        for (Imagen imagen : t.getImagenes()) {
+                            imagen.setPublicacion(t);
+                            servA.insertarImagen(imagen);
                         }
                     }
                 }
                 return true;
-            }else{
+            } else {
                 return false;
             }
-            
-        }catch(Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }finally{
+        } finally {
             CerrarResultSet(rs);
             CerrarStatement(stmt);
             Desconectar();
@@ -83,24 +91,24 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
     public Optional<Publicacion> findPK() {
         return null;
     }
-    
-    public List<Publicacion> findAll(int currentPage, int pageSize) throws ClassNotFoundException {
+
+    public List<Publicacion> findAll(int cantidadPublicaciones) throws ClassNotFoundException {
         List<Publicacion> publicaciones = new ArrayList<>();
         ResultSet rs = null;
         PreparedStatement stmt = null;
         ServicioUsuario servUsuario = new ServicioUsuario();
-        
+        ServicioArchivo servA = new ServicioArchivo();
 
         try {
             Conectar();
-            String query = "SELECT id, descripcion, usuario_id, fecha_publicacion, fecha_actualizacion,numero_favoritos "
+            // La consulta SQL se actualiza para usar un límite
+            String query = "SELECT id, descripcion, usuario_id, fecha_publicacion, fecha_actualizacion, numero_favoritos "
                     + "FROM publicacion "
                     + "ORDER BY fecha_publicacion DESC "
-                    + "LIMIT ?, ?";
+                    + "LIMIT ?";
 
             stmt = getConexion().prepareStatement(query);
-            stmt.setInt(1, currentPage * pageSize);
-            stmt.setInt(2, pageSize);
+            stmt.setInt(1, cantidadPublicaciones);  // Límite
             rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -111,6 +119,8 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
                 publicacion.setFecha_publicacion(rs.getTimestamp("fecha_publicacion"));
                 publicacion.setFecha_actualizacion(rs.getTimestamp("fecha_actualizacion"));
                 publicacion.setNumero_favoritos(rs.getInt("numero_favoritos"));
+                publicacion.setDocumentos(servA.buscarDocumento(publicacion));
+                publicacion.setImagenes(servA.buscarImagen(publicacion));
                 publicaciones.add(publicacion);
             }
         } catch (SQLException e) {
@@ -122,5 +132,5 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion>{
         }
         return publicaciones;
     }
-    
+
 }

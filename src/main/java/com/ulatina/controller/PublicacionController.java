@@ -5,6 +5,8 @@
 package com.ulatina.controller;
 
 import com.ulatina.model.Archivo;
+import com.ulatina.model.Documento;
+import com.ulatina.model.Imagen;
 import com.ulatina.model.Publicacion;
 import com.ulatina.model.UsuarioTO;
 import com.ulatina.service.ServicioPublicacion;
@@ -23,6 +25,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.ResponsiveOption;
 import org.primefaces.model.file.UploadedFile;
 import org.primefaces.model.file.UploadedFiles;
 
@@ -45,55 +48,45 @@ public class PublicacionController implements Serializable{
     private List<Archivo> archivos;
     private Archivo archivo;
     List<UploadedFile> files;
-    
+    private Documento documento;
+    private Imagen imagen;
+    private List<Documento> documentos;
+    private List<Imagen> imagenes;
+    private List<ResponsiveOption> responsiveOptions1;
+    private String photo;
+
     @ManagedProperty(value = "#{loginController}")
     private LoginController loginController;
 
     public PublicacionController() {
         servPublicacion = new ServicioPublicacion();
         publicaciones = new ArrayList<>();
-        cargarPublicaciones();
+        responsiveOptions1 = new ArrayList<>();
+        responsiveOptions1.add(new ResponsiveOption("1024px", 5));
+        responsiveOptions1.add(new ResponsiveOption("768px", 3));
+        responsiveOptions1.add(new ResponsiveOption("560px", 1));
+        photo = "No se cargo la imagen";
+        cargarPublicaciones(0);
     }
-    
+
     public void handleFileUploadEvent(FileUploadEvent event) throws IOException {
         System.out.println("===>>> " + event.getFile().getFileName() + " size: " + event.getFile().getSize());
-        archivo = new Archivo();
+        documento = new Documento();
+        imagen = new Imagen();
         this.copyFile(event.getFile().getFileName(), event.getFile().getInputStream(), false);
-        archivos.add(archivo);
-        
-//files.add(event.getFile());
-        /*for (UploadedFile file : files) {
-            System.out.println("===>>> " + file.getFileName() + " size: " + file.getSize());
-        }*/
+
     }
-    
-    public void nuevaPublicacion(){
+
+    public void nuevaPublicacion() {
         descripcion = "";
         files = new ArrayList<>();
-        archivos = new ArrayList<Archivo>();
-    }
-    
-    public void handleFileUpload() {
-        try {
-            if (files != null) {
-                for (UploadedFile file : files) {
-                    archivo = new Archivo();
-                    System.out.println("===>>> " + file);
-                    System.out.println("===>>> " + file.getFileName() + " size: " + file.getSize());
-                    this.copyFile(file.getFileName(), file.getInputStream(), false);
-                    //Guardar en la base de datos los datos relacionados al archivo (no el archivo)
-                    archivos.add(archivo);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        imagenes = new ArrayList<Imagen>();
+        documentos = new ArrayList<Documento>();
     }
 
     protected void copyFile(String fileName, InputStream in, boolean esTemporal) {
         try {
             if (fileName != null) {
-                
 
                 String[] partesArchivo = fileName.split(Pattern.quote("."));
                 String nombreArchivo = partesArchivo[0];
@@ -104,23 +97,20 @@ public class PublicacionController implements Serializable{
                 String url;
                 // Determine the destination path based on the file extension
                 String destinationFile;
-                if (extensionArchivo.equalsIgnoreCase("jpg") || extensionArchivo.equalsIgnoreCase("jpeg") ||
-                    extensionArchivo.equalsIgnoreCase("png") || extensionArchivo.equalsIgnoreCase("gif")) {
-                    destinationFile = "C:/Users/josem/OneDrive/Documentos/Proyecto Ingenieria Software 2/Proyecto Pagina/Red_Social_Academica/archivos/imagenes/";
-                    url = ""+destinationFile + nombreArchivo + "." + extensionArchivo;
-                    archivo.setUrl(url);
-                    archivo.setTipo("Imagen");
+                if (extensionArchivo.equalsIgnoreCase("jpg") || extensionArchivo.equalsIgnoreCase("jpeg")
+                        || extensionArchivo.equalsIgnoreCase("png") || extensionArchivo.equalsIgnoreCase("gif")) {
+                    destinationFile = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/archivos/imagenes/");
+                    url = "" + "http://localhost:8080/Red_Social_Academica/archivos/imagenes/" + nombreArchivo + "." + extensionArchivo;
+                    imagen.setUrl(url);
+                    imagenes.add(imagen);
                 } else if (extensionArchivo.equalsIgnoreCase("pdf") || extensionArchivo.equalsIgnoreCase("docx")) {
-                    destinationFile = "C:/Users/josem/OneDrive/Documentos/Proyecto Ingenieria Software 2/Proyecto Pagina/Red_Social_Academica/archivos/documentos/";
-                    url = ""+destinationFile + nombreArchivo + "." + extensionArchivo;
-                    archivo.setUrl(url);
-                    archivo.setTipo("Documento");
+                    destinationFile = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/archivos/documentos/");
+                    url = "" + "http://localhost:8080/Red_Social_Academica/archivos/documentos/" + nombreArchivo + "." + extensionArchivo;
+                    documento.setUrl(url);
+                    documentos.add(documento);
                 } else {
                     throw new IOException("Unsupported file type: " + extensionArchivo);
                 }
-            
-                
-                
 
                 //File tmp = new File(destinationFile + fileName);
                 File tmp = new File(destinationFile + nombreArchivo + "." + extensionArchivo);
@@ -141,22 +131,23 @@ public class PublicacionController implements Serializable{
             System.out.println(e.getMessage());
         }
     }
-    
+
     public void crearPublicacion() {
         try {
-            
+
             //handleFileUpload();
             publicacion = new Publicacion();
             publicacion.setDescripcion(descripcion);
             publicacion.setUsuario(loginController.getUsuarioTO());
-            publicacion.setArchivo(archivos);
-            
+            publicacion.setDocumentos(documentos);
+            publicacion.setImagenes(imagenes);
+
             if (!servPublicacion.insertar(publicacion)) {
                 descripcion = "";
                 FacesContext.getCurrentInstance().addMessage("sticky-key", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo realizar la publicacion"));
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Publicacion creada satisfactoriamente"));
-               cargarPublicaciones(); // Actualiza la lista de publicaciones
+                cargarPublicaciones(0); // Actualiza la lista de publicaciones
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,9 +158,19 @@ public class PublicacionController implements Serializable{
         return publicaciones;
     }
 
-    public void cargarPublicaciones() {
+    public void cargarPublicaciones(int size) {
         try {
-            publicaciones = servPublicacion.findAll(currentPage, PAGE_SIZE);
+            size = size + 10;
+            publicaciones = servPublicacion.findAll(size);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cargarMasPublicaciones() {
+        try {
+            int size = publicaciones.size() + 10;
+            publicaciones = servPublicacion.findAll(size);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -177,7 +178,35 @@ public class PublicacionController implements Serializable{
 
     public void loadMore() {
         currentPage++;
-        cargarPublicaciones();
+        cargarPublicaciones(0);
+    }
+
+    public String obtenerIconoDocumento(String url) {
+        if (url != null && !url.isEmpty()) {
+            String extension = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+            switch (extension) {
+                case "pdf":
+                    return "pi pi-file-pdf";
+                case "doc":
+                case "docx":
+                    return "pi pi-file-word";
+                case "xls":
+                case "xlsx":
+                    return "pi pi-file-excel";
+                // Agrega más casos según sea necesario
+                default:
+                    return "pi pi-file";
+            }
+        }
+        return "pi pi-file";
+    }
+
+    public String obtenerNombreDocumento(String url) {
+        if (url != null && !url.isEmpty()) {
+            // Extraer el nombre del archivo desde la URL
+            return url.substring(url.lastIndexOf('/') + 1);
+        }
+        return "Documento";
     }
 
     public void verDocumento(String url) {
@@ -187,6 +216,11 @@ public class PublicacionController implements Serializable{
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo abrir el documento."));
             e.printStackTrace();
         }
+    }
+
+    public void favoritos(Publicacion publicacion) {
+        publicacion.setNumero_favoritos(publicacion.getNumero_favoritos() + 1);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("You favorited a post."));
     }
 
     public void descargarDocumento(String url) {
@@ -228,15 +262,7 @@ public class PublicacionController implements Serializable{
     public void setUsuario(UsuarioTO usuario) {
         this.usuario = usuario;
     }
-/*
-    public UploadedFiles getFiles() {
-        return files;
-    }
 
-    public void setFiles(UploadedFiles files) {
-        this.files = files;
-    }
-*/
     public List<Archivo> getArchivos() {
         return archivos;
     }
@@ -252,6 +278,53 @@ public class PublicacionController implements Serializable{
     public void setFiles(List<UploadedFile> files) {
         this.files = files;
     }
-    
-    
+
+    public List<ResponsiveOption> getResponsiveOptions1() {
+        return responsiveOptions1;
+    }
+
+    public void setResponsiveOptions1(List<ResponsiveOption> responsiveOptions1) {
+        this.responsiveOptions1 = responsiveOptions1;
+    }
+
+    public Documento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
+    }
+
+    public Imagen getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(Imagen imagen) {
+        this.imagen = imagen;
+    }
+
+    public List<Documento> getDocumentos() {
+        return documentos;
+    }
+
+    public void setDocumentos(List<Documento> documentos) {
+        this.documentos = documentos;
+    }
+
+    public List<Imagen> getImagenes() {
+        return imagenes;
+    }
+
+    public void setImagenes(List<Imagen> imagenes) {
+        this.imagenes = imagenes;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
 }

@@ -2,37 +2,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Publicaciones</title>
         <style>
-            body {
-                background-color: #2c3e50;
-                background: linear-gradient(white, #2c3e50);
-                margin: 0;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                color: #ffffff;
-            }
-            .right-align {
-                text-align: right;
-                display: block;
-                width: 100%;
-            }
-            .left-align {
-                text-align: left;
-                display: block;
-                width: 100%;
-            }
-            .publication-panel {
-                margin-bottom: 15px;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                background-color: #34495e;
-            }
-            .publication-description {
-                font-weight: bold;
-            }
+
             .rounded-button {
                 background-color: #a6acaf;
                 color: white;
@@ -46,23 +21,93 @@
                 justify-content: center;
                 align-items: center;
             }
-            .icon-button {
-                background-color: transparent;
-                border: none;
-                color: #ffffff;
-                cursor: pointer;
-                font-size: 16px;
-                padding: 5px;
-                margin: 2px;
+            .feed-container {
+                max-width: 600px;
+                margin: auto;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .post {
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                margin-bottom: 20px;
+                padding: 15px;
+                background-color: #fff;
+                max-width: 600px;
+                min-width: 300px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .post-header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            .profile-pic {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+
+            .author-name {
+                font-weight: bold;
+                margin-right: auto;
+            }
+
+            .timestamp {
+                color: #777;
+                font-size: 0.8em;
+            }
+
+            .post-content {
+                margin-bottom: 10px;
+            }
+
+            .post-text {
+                margin-bottom: 10px;
+                word-wrap: break-word; /* Ajustar el texto largo */
+                overflow-wrap: break-word; /* Para navegadores modernos */
+                max-width: 100%; /* Asegurar que no se salga del contenedor */
+            }
+
+            .post-document {
+                margin-bottom: 10px;
+                position: relative;
+            }
+
+            .document-link {
+                display: block;
+                padding: 10px;
+                background-color: #f0f0f0;
+                border-radius: 5px;
+                text-decoration: none;
+                color: #333;
+                text-align: center;
+            }
+
+            .post-actions {
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .galleria {
+                width: 100%;
+                height: auto;
             }
         </style>
     </h:head>
-    
+
     <h:body>
         <div class="card">
             <h:form id="mainForm" enctype="multipart/form-data">
                 <p:growl id="messages"/>
-               
+
                 <p:menubar>
                     <p:submenu label="Mi Perfil" icon="pi pi-fw pi-user">
                     </p:submenu>
@@ -72,6 +117,9 @@
 
                     <p:submenu label="Chat" icon="pi pi-fw pi-comment">
                     </p:submenu>
+                    
+                    <p:menuitem value="Cerrar Sesion" icon="pi pi-sign-out" outcome="IniciarSesion.xhtml">
+                    </p:menuitem>
                 </p:menubar>
 
                 <!-- Botón redondo para abrir el diálogo -->
@@ -83,55 +131,55 @@
                         <h:outputLabel for="description" value="Descripción:" />
                         <p:inputTextarea id="description" value="#{publicacionController.descripcion}" rows="4" cols="40" style="width: 100%;"/>
                         <p:fileUpload id="upl" listener="#{publicacionController.handleFileUploadEvent}" mode="advanced" dragDropSupport="false"
-                                      multiple="true" update="messages,files" accept=".jpg,.jpeg,.png,.gif,.pdf,.docx" style="width: 100%;" fileLimit="10"/>
-                        <h:panelGrid columns="1" id="files">
-                            <h:outputText value="Archivos cargados: #{publicacionController.archivos.size()}" rendered="#{not empty publicacionController.archivos}" />
+                                      multiple="true" update=":mainForm:messages,files1,files2" accept=".jpg,.jpeg,.png,.gif,.pdf,.docx" style="width: 100%;" fileLimit="10"/>
+                        <h:panelGrid columns="1" id="files1">
+                            <h:outputText value="Imagenes cargadas: #{publicacionController.imagenes.size()}" rendered="#{not empty publicacionController.imagenes}" />
                         </h:panelGrid>
-                        <p:commandButton value="Publicar" actionListener="#{publicacionController.crearPublicacion}" oncomplete="PF('dlg').hide();" update="messages publicaciones"/>
+                        <h:panelGrid columns="1" id="files2">
+                            <h:outputText value="Documentos cargados: #{publicacionController.documentos.size()}" rendered="#{not empty publicacionController.documentos}" />
+                        </h:panelGrid>
+                        <p:commandButton value="Publicar" actionListener="#{publicacionController.crearPublicacion}" oncomplete="PF('dlg').hide();" update=":mainForm:messages :mainForm:publicaciones"/>
                     </h:panelGrid>
                 </p:dialog>
-                
-                <!-- Lista de publicaciones -->
-                <h:panelGroup id="publicaciones">
-                    <p:dataList value="#{publicacionController.publicaciones}" var="publicacion" itemType="Publicacion" paginator="true" rows="10">
-                        <p:panel styleClass="publication-panel">
-                            <!-- Para mostrar la descripción de la publicación -->
-                            <h:outputText value="#{publicacion.descripcion}" styleClass="publication-description" />
-                            <br />
-                            <!-- Para mostrar el nombre del usuario que hizo la publicación -->
-                            <h:outputText value="Publicado por: #{publicacion.usuario.nombre}" styleClass="publication-user" />
-                            <br />
-                            <!-- Con esto se muestra la URL de la imagen, si está disponible -->
-                            <p:graphicImage value="#{publicacion.archivo}" rendered="#{not empty publicacion.archivo}" />
-                            <br />
-                            <!-- Con esto se muestra la fecha de publicación alineada a la derecha -->
-                            <h:panelGroup styleClass="right-align">
-                                <h:outputText value="Fecha de publicación: #{publicacion.fecha_publicacion}" />
+
+                <h:panelGrid columns="1" id="publicaciones" styleClass="feed-container">
+                    <ui:repeat value="#{publicacionController.publicaciones}" var="publicacion">
+                        <h:panelGroup layout="block" styleClass="post">
+                            <h:panelGroup layout="block" styleClass="post-header">
+
+                                <h:outputText value="#{publicacion.usuario.nombre}" styleClass="author-name"/>
+                                <h:outputText value="#{publicacion.fecha_publicacion}" styleClass="timestamp"/>
                             </h:panelGroup>
-                            <br />
-                            <!-- Con esto se muestra la fecha de actualización alineada a la derecha -->
-                            <h:panelGroup styleClass="right-align">
-                                <h:outputText value="Fecha de actualización: #{publicacion.fecha_actualizacion}" />
+                            <h:panelGroup layout="block" styleClass="post-content">
+                                <h:outputText value="#{publicacion.descripcion}" escape="false" styleClass="post-text"/>
+                                <div class="card">
+                                    <p:galleria value="#{publicacion.imagenes}" var="imagen" numVisible="5" responsiveOptions="#{publicacionController.responsiveOptions1}"
+                                                showThumbnails="false" showIndicators="true" changeItemOnIndicatorHover="true" style="max-width: 640px">
+                                        <p:graphicImage value="#{imagen.url}" alt="#{photo}" style="width: 100%; display: block;" />
+                                    </p:galleria>
+                                </div>    
                             </h:panelGroup>
-                            <br />
-                            <!-- Botón para ver el documento, si está disponible -->
-                            <p:commandButton icon="pi pi-eye" styleClass="icon-button" action="#{publicacionController.verDocumento(publicacion.archivo)}" rendered="#{not empty publicacion.archivo}" />
-                            <!-- Botón para descargar el documento, si está disponible -->
-                            <p:commandButton icon="pi pi-download" styleClass="icon-button" action="#{publicacionController.descargarDocumento(publicacion.archivo)}" rendered="#{not empty publicacion.archivo}" />
-                            <br />
-                            <!-- Aquí se muestra el número de favoritos alineado a la izquierda -->
-                            <h:panelGroup styleClass="left-align">
-                                <h:outputText value="Número de favoritos: #{publicacion.numero_favoritos}" />
+                            <div class="post-document">
+                                <ui:repeat value="#{publicacion.documentos}" var="documento">
+                                    <div class="document-container">
+                                        <h:outputLink value="#{documento.url}" styleClass="document-link">
+                                            <h:outputText value="#{publicacionController.obtenerNombreDocumento(documento.url)}" />
+                                            <i class="#{publicacionController.obtenerIconoDocumento(documento.url)}"></i>
+                                        </h:outputLink>
+                                    </div>
+                                </ui:repeat>
+                            </div>
+
+                            <h:panelGroup layout="block" styleClass="post-actions">
+                                <p:commandButton value="Favoritos (#{publicacion.numero_favoritos})" actionListener="#{publicacionController.favoritos(publicacion)}" update=":mainForm:messages"/>
                             </h:panelGroup>
-                            <br />
-                            <!-- Botón de favoritos -->
-                            <p:commandButton icon="pi pi-star" value="Favorito" />
-                        </p:panel>
-                    </p:dataList>
+                        </h:panelGroup>
+                    </ui:repeat>
                     <!-- Botón para cargar más publicaciones -->
-                    <p:commandButton value="Cargar más" action="#{publicacionController.loadMore}" update="publicaciones"/>
-                </h:panelGroup>
+                    <p:commandButton value="Cargar más" action="#{publicacionController.cargarMasPublicaciones()}" update=":mainForm:publicaciones"/>
+                </h:panelGrid>
             </h:form>
         </div>
     </h:body>
 </html>
+

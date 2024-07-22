@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Ver Usuario</title>
+        <style>
+            body {
+                background-color: #2c3e50;
+                background: linear-gradient(white, #2c3e50);
+                margin: 0;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                color: #ffffff;
+            }
+            .profile-panel {
+                background-color: #34495e;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                width: 600px;
+                margin: 50px auto;
+                color: #ffffff;
+            }
+            .profile-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .profile-photo {
+                width: 150px;
+                height: 150px;
+                background: url('https://img.icons8.com/clouds/100/000000/user.png') no-repeat center;
+                background-size: cover;
+                border-radius: 50%;
+                margin: 0 auto 20px;
+            }
+            .profile-info {
+                margin-bottom: 20px;
+            }
+            .profile-info label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+            .profile-info span {
+                display: block;
+                margin-bottom: 15px;
+            }
+            .profile-buttons {
+                display: flex;
+                justify-content: space-between;
+            }
+            .profile-buttons .p\:commandButton {
+                width: 45%;
+            }
+
+            .custom-menubar {
+                background-color: #34495e !important; /* Cambia esto al color que desees */
+                border: none !important;
+            }
+
+            .custom-menubar .ui-menuitem .ui-menuitem-text {
+                color: #ffffff !important; /* Texto blanco */
+            }
+
+            /* Cambia el color de los iconos */
+            .custom-menubar .ui-menuitem-icon {
+                color: #ffffff !important; /* Color blanco para los iconos */
+            }
+
+            .menu-search {
+                width: 200px; /* Ajusta el ancho del campo de búsqueda */
+            }
+
+            .menu-search .ui-inputtext {
+                background-color: #fff; /* Color de fondo del campo de búsqueda */
+                color: #333; /* Color del texto en el campo de búsqueda */
+                border: 1px solid #ccc; /* Borde del campo de búsqueda */
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+        <div class="card">
+            <h:form id="mainForm">
+
+                <p:menubar styleClass="custom-menubar">
+
+                    <p:menuitem icon="pi pi-home" outcome="Publicacion.xhtml">
+                    </p:menuitem>
+
+                    <p:menuitem value="Mi Perfil" icon="pi pi-fw pi-user" outcome="verperfil.xhtml">
+                    </p:menuitem>
+
+                    <p:menuitem value="Foro" icon="pi pi-fw pi-users">
+                    </p:menuitem>
+
+                    <p:menuitem value="Chat" icon="pi pi-fw pi-comment">
+                    </p:menuitem>
+
+                    <p:menuitem value="Cerrar Sesion" icon="pi pi-sign-out" outcome="IniciarSesion.xhtml">
+                    </p:menuitem>
+
+                    <p:menuitem>
+                        <p:autoComplete id="buscador" 
+                                        value="#{busquedaController.usuarioSeleccionado}" 
+                                        completeMethod="#{busquedaController.obtenerResultados}" 
+                                        var="usuario" 
+                                        itemLabel="#{usuario.nombre}" 
+                                        itemValue="#{usuario}" 
+                                        forceSelection="true"
+                                        converter="usuarioConverter"
+                                        placeholder="Buscar...">
+                            <p:ajax event="itemSelect" listener="#{busquedaController.redirigirUsuario}" update=":mainForm" />
+                        </p:autoComplete>
+                    </p:menuitem>
+
+                </p:menubar>
+            </h:form>
+        </div>
+        <div class="profile-panel">
+            <h:form id="profileForm">
+
+                <h:panelGroup class="profile-header">
+                    <div class="profile-photo">
+                        <p:graphicImage value="#{busquedaController.usuarioSeleccionado.fotoPerfil}" rendered="#{not empty busquedaController.usuarioSeleccionado.fotoPerfil}" style="width: 100%; height: 100%;" />
+                    </div>
+                    <h2>Perfil de #{busquedaController.usuarioSeleccionado.nombre}</h2>
+                </h:panelGroup>
+
+                <h:panelGrid columns="2" class="profile-info">
+                    <label>Nombre:</label>
+                    <span>#{busquedaController.usuarioSeleccionado.nombre}</span>
+
+                    <label>Correo Electrónico:</label>
+                    <span>#{busquedaController.usuarioSeleccionado.correo}</span>
+
+                    <label>Biografía:</label>
+                    <span>#{empty busquedaController.usuarioSeleccionado.biografia ? 'No hay biografía' : busquedaController.usuarioSeleccionado.biografia}</span>
+
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

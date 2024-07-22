@@ -15,18 +15,18 @@ import java.util.Optional;
  *
  * @author Usuario
  */
-public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO>{
-    
-   public UsuarioTO validarUsuario(String correo, String contrasena) {
+public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
+
+    public UsuarioTO validarUsuario(String correo, String contrasena) {
 
         PreparedStatement stmt = null;
         ResultSet rs = null;
         UsuarioTO usuarioTORetorno = null;
-        
+
         try {
-            
+
             Conectar();
-            
+
             String sql = "SELECT * FROM usuario WHERE correo = ? AND contrasena = ?";
             stmt = getConexion().prepareStatement(sql);
             stmt.setString(1, correo);
@@ -39,8 +39,9 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO>{
                 String nom = rs.getString("nombre");
                 int rol = rs.getInt("rol_id");
                 String pass = rs.getString("contrasena");
-               
-                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol);
+                String bio = rs.getString("biografia");
+
+                usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol,bio);
 
             }
         } catch (Exception e) {
@@ -68,7 +69,6 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO>{
             stmt.setString(2, t.getCorreo());
             stmt.setString(3, t.getContrasena());
             stmt.setInt(4, t.getRol());
-         
 
             int filasInsertadas = stmt.executeUpdate();
 
@@ -88,15 +88,15 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO>{
         }
     }
 
-    public UsuarioTO usuarioPK(int idU){
+    public UsuarioTO usuarioPK(int idU) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         UsuarioTO usuarioTORetorno = null;
-        
+
         try {
-            
+
             Conectar();
-            
+
             String sql = "SELECT * FROM usuario WHERE id = ?";
             stmt = getConexion().prepareStatement(sql);
             stmt.setInt(1, idU);
@@ -108,7 +108,7 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO>{
                 String nom = rs.getString("nombre");
                 int rol = rs.getInt("rol_id");
                 String pass = rs.getString("contrasena");
-               
+
                 usuarioTORetorno = new UsuarioTO(id, mail, pass, nom, rol);
 
             }
@@ -122,7 +122,105 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO>{
         }
         return usuarioTORetorno;
     }
-    
+
+    public Boolean actualizarBiografia(int idUsuario, String biografia) {
+        PreparedStatement stmt = null;
+        try {
+            Conectar();
+            String sql = "UPDATE usuario SET biografia = ? WHERE id = ?";
+            stmt = getConexion().prepareStatement(sql);
+            stmt.setString(1, biografia);
+            stmt.setInt(2, idUsuario);
+
+            int filasActualizadas = stmt.executeUpdate();
+            return filasActualizadas > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+    }
+
+    public Boolean actualizarFotoPerfil(int idUsuario, String urlFoto) {
+        PreparedStatement stmt = null;
+        try {
+            Conectar();
+            String sql = "UPDATE usuario SET foto_perfil = ? WHERE id = ?";
+            stmt = getConexion().prepareStatement(sql);
+            stmt.setString(1, urlFoto);
+            stmt.setInt(2, idUsuario);
+
+            int filasActualizadas = stmt.executeUpdate();
+            return filasActualizadas > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+    }
+
+    public Boolean actualizarCV(int idUsuario, String urlCV) {
+        PreparedStatement stmt = null;
+        try {
+            Conectar();
+            String sql = "UPDATE usuario SET cv = ? WHERE id = ?";
+            stmt = getConexion().prepareStatement(sql);
+            stmt.setString(1, urlCV);
+            stmt.setInt(2, idUsuario);
+
+            int filasActualizadas = stmt.executeUpdate();
+            return filasActualizadas > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+    }
+
+    public List<UsuarioTO> buscarUsuarios(String terminoBusqueda) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<UsuarioTO> usuarios = new ArrayList<>();
+
+        try {
+            Conectar();
+
+            // La consulta utiliza LIKE para buscar coincidencias parciales
+            String sql = "SELECT * FROM usuario WHERE nombre LIKE ?";
+            stmt = getConexion().prepareStatement(sql);
+            // Usamos el término de búsqueda con '%' para buscar coincidencias parciales
+            String termino = "%" + terminoBusqueda + "%";
+            stmt.setString(1, termino);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String mail = rs.getString("correo");
+                String nom = rs.getString("nombre");
+                int rol = rs.getInt("rol_id");
+                String pass = rs.getString("contrasena");
+                String bio = rs.getString("biografia");
+
+                UsuarioTO usuarioTO = new UsuarioTO(id, mail, pass, nom, rol,bio);
+                usuarios.add(usuarioTO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Cerrar recursos
+            CerrarResultSet(rs);
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+        return usuarios;
+    }
+
     @Override
     public Boolean modificar(UsuarioTO t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -143,6 +241,4 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO>{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
- 
-    
 }

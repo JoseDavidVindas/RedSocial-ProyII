@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -54,6 +55,7 @@ public class PublicacionController implements Serializable{
     private List<Imagen> imagenes;
     private List<ResponsiveOption> responsiveOptions1;
     private String photo;
+    private UsuarioTO user;
 
     @ManagedProperty(value = "#{loginController}")
     private LoginController loginController;
@@ -67,6 +69,10 @@ public class PublicacionController implements Serializable{
         responsiveOptions1.add(new ResponsiveOption("560px", 1));
         photo = "No se cargo la imagen";
         cargarPublicaciones(0);
+    }
+    @PostConstruct
+    public void init(){
+        user = loginController.getUsuarioTO();
     }
 
     public void handleFileUploadEvent(FileUploadEvent event) throws IOException {
@@ -325,6 +331,14 @@ public class PublicacionController implements Serializable{
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public UsuarioTO getUser() {
+        return user;
+    }
+
+    public void setUser(UsuarioTO user) {
+        this.user = user;
     }
 
 }

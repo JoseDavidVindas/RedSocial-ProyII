@@ -132,12 +132,17 @@
                     <label>Nombre:</label>
                     <span>#{verPerfilController.usuario.nombre}</span>
 
+                    <label>Rol:</label>
+                    <span>#{verPerfilController.rol.nombre}</span>
+                    
                     <label>Correo Electrónico:</label>
                     <span>#{verPerfilController.usuario.correo}</span>
 
                     <label>Biografía:</label>
                     <span>#{empty verPerfilController.usuario.biografia ? 'No hay biografía' : verPerfilController.usuario.biografia}</span>
 
+                    
+                    
                 </h:panelGrid>
 
                 <div class="profile-buttons">

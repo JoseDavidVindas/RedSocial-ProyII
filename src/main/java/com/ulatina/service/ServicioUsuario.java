@@ -4,6 +4,7 @@
  */
 package com.ulatina.service;
 
+import com.ulatina.model.Rol;
 import com.ulatina.model.UsuarioTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -221,6 +222,38 @@ public class ServicioUsuario extends Servicio implements CRUD<UsuarioTO> {
         return usuarios;
     }
 
+    public Rol rolPK(int idR) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Rol rol = null;
+
+        try {
+
+            Conectar();
+
+            String sql = "SELECT * FROM rol WHERE id = ?";
+            stmt = getConexion().prepareStatement(sql);
+            stmt.setInt(1, idR);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String nom = rs.getString("nombre");
+
+                rol = new Rol(id, nom);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //Paso 5
+            CerrarResultSet(rs);
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+        return rol;
+    }
+    
     @Override
     public Boolean modificar(UsuarioTO t) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

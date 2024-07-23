@@ -4,6 +4,7 @@
  */
 package com.ulatina.controller;
 
+import com.ulatina.model.Rol;
 import com.ulatina.model.UsuarioTO;
 import com.ulatina.service.ServicioUsuario;
 import java.io.File;
@@ -17,6 +18,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,7 +31,7 @@ import org.primefaces.model.file.UploadedFile;
  
 
 @ManagedBean(name="verPerfilController")
-@SessionScoped
+@ViewScoped
 public class VerPerfilController implements Serializable {
 
     private UsuarioTO usuario;
@@ -39,8 +41,11 @@ public class VerPerfilController implements Serializable {
     private String fotoPerfil;
     @ManagedProperty(value = "#{loginController}")
     private LoginController loginController;
+    private Rol rol;
     
     public VerPerfilController() {
+        rol = new Rol();
+        servUsuario = new ServicioUsuario();
         
     }
 
@@ -49,6 +54,7 @@ public class VerPerfilController implements Serializable {
     @PostConstruct
     public void init() {
         usuario = loginController.getUsuarioTO(); 
+        rol = servUsuario.rolPK(usuario.getRol());
         biografia = usuario.getBiografia();
         fotoPerfil = usuario.getFotoPerfil();
         cvUrl = usuario.getCvUrl();
@@ -192,6 +198,14 @@ public class VerPerfilController implements Serializable {
 
     public void setLoginController(LoginController loginController) {
         this.loginController = loginController;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
    
    

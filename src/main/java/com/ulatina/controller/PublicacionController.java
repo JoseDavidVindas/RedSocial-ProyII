@@ -4,18 +4,26 @@
  */
 package com.ulatina.controller;
 
+import java.util.zip.*;
 import com.ulatina.model.Archivo;
 import com.ulatina.model.Documento;
 import com.ulatina.model.Imagen;
 import com.ulatina.model.Publicacion;
 import com.ulatina.model.UsuarioTO;
+import com.ulatina.service.ServicioArchivo;
+import com.ulatina.service.ServicioFavorito;
 import com.ulatina.service.ServicioPublicacion;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -25,8 +33,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.primefaces.event.FileUploadEvent;
+
 import org.primefaces.model.ResponsiveOption;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.model.file.UploadedFile;
 import org.primefaces.model.file.UploadedFiles;
 
@@ -34,10 +50,14 @@ import org.primefaces.model.file.UploadedFiles;
  *
  * @author josem
  */
-@ManagedBean(name="publicacionController")
+@ManagedBean(name = "publicacionController")
 @SessionScoped
-public class PublicacionController implements Serializable{
+@ViewScoped
+public class PublicacionController implements Serializable {
     
+    private ServicioFavorito servicioFavorito;
+    private ServicioArchivo servicioArchivo;
+    private StreamedContent file;
     private Publicacion publicacion;
     private String descripcion;
     private ServicioPublicacion servPublicacion;
@@ -61,6 +81,9 @@ public class PublicacionController implements Serializable{
     private LoginController loginController;
 
     public PublicacionController() {
+        
+        
+        servicioArchivo = new ServicioArchivo();
         servPublicacion = new ServicioPublicacion();
         publicaciones = new ArrayList<>();
         responsiveOptions1 = new ArrayList<>();
@@ -70,9 +93,11 @@ public class PublicacionController implements Serializable{
         photo = "No se cargo la imagen";
         cargarPublicaciones(0);
     }
+
     @PostConstruct
-    public void init(){
+    public void init() {
         user = loginController.getUsuarioTO();
+        this.servicioFavorito = new ServicioFavorito();
     }
 
     public void handleFileUploadEvent(FileUploadEvent event) throws IOException {
@@ -223,16 +248,163 @@ public class PublicacionController implements Serializable{
             e.printStackTrace();
         }
     }
+ 
+    public void agregarFavoritos(Publicacion publicacion) {
+    try {
+        int idUsuario = obtenerIdUsuarioActual();
+        servicioFavorito.agregarArchivoFavorito(idUsuario, publicacion.getId());
+        for (Documento doc : publicacion.getDocumentos()) {
+            servicioFavorito.agregarArchivoFavorito(idUsuario, doc.getId());
+        }
+        for (Imagen img : publicacion.getImagenes()) {
+            servicioFavorito.agregarArchivoFavorito(idUsuario, img.getId());
+        }
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Publicación y archivos agregados a favoritos"));
+        this.redireccionar("/Favorito.xhtml");
+    } catch (Exception e) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo agregar la publicación a favoritos"));
+        e.printStackTrace();
+    }
+}
 
-    public void favoritos(Publicacion publicacion) {
-        publicacion.setNumero_favoritos(publicacion.getNumero_favoritos() + 1);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("You favorited a post."));
+
+    private int obtenerIdUsuarioActual() {
+        // Aquí debes obtener el ID del usuario actual, por ejemplo, desde la sesión
+        UsuarioTO usuarioActual = loginController.getUsuarioTO();
+        return usuarioActual != null ? usuarioActual.getId() : -1; // O manejar caso de usuario no logueado
+    }
+    
+    public List<Publicacion> cargarFavoritos() {
+    try {
+        int idUsuario = obtenerIdUsuarioActual();
+        return servicioFavorito.obtenerFavoritosPorUsuario(idUsuario);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return new ArrayList<>();
+    }
+}
+
+    
+    // Inyección de dependencias
+
+    /*public void setServicioArchivo(ServicioArchivo servicioArchivo) {
+        this.servicioArchivo = servicioArchivo;
     }
 
-    public void descargarDocumento(String url) {
-        // Implementación del método para descargar documento
+    public StreamedContent prepararDescarga(int archivoId) {
+        try {
+            String urlArchivo = servicioArchivo.obtenerUrlArchivo(archivoId);
+            InputStream stream = new FileInputStream(new File(urlArchivo));
+            String extension = urlArchivo.substring(urlArchivo.lastIndexOf('.') + 1);
+            return DefaultStreamedContent.builder()
+                    .name("archivo." + extension)
+                    .contentType(Files.probeContentType(Paths.get(urlArchivo)))
+                    .stream(() -> stream)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
+    public void descargarArchivos(int idPublicacion) throws IOException {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
+
+        // Buscar la publicación en la lista
+        Publicacion publicacionEncontrada = null;
+        for (Publicacion p : publicaciones) {
+            if (p.getId() == idPublicacion) {
+                publicacionEncontrada = p;
+                break;
+            }
+        }
+
+        // Asegúrate de que publicacionEncontrada no es null antes de continuar
+        if (publicacionEncontrada == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Publicación no encontrada."));
+            return;
+        }
+
+        // Establece el tipo de contenido y el nombre del archivo ZIP
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=\"publicacion_" + idPublicacion + ".zip\"");
+
+        // Crear flujo de salida
+        try (ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream())) {
+            // Agregar documentos al ZIP
+            for (Documento doc : publicacionEncontrada.getDocumentos()) {
+                File fileDownload = new File(doc.getUrl());
+                if (fileDownload.exists()) {
+                    try (InputStream docInputStream = new FileInputStream(fileDownload)) {
+                        String id = "" + doc.getId();
+                        ZipEntry zipEntry = new ZipEntry(id + getFileExtension(doc.getUrl()));
+                        zipOut.putNextEntry(zipEntry);
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = docInputStream.read(buffer)) > 0) {
+                            zipOut.write(buffer, 0, len);
+                        }
+                        zipOut.closeEntry();
+                    } catch (FileNotFoundException e) {
+                        System.err.println("File not found: " + doc.getUrl());
+                    } catch (IOException e) {
+                        System.err.println("Error processing file: " + doc.getUrl());
+                    }
+                } else {
+                    System.err.println("File does not exist: " + doc.getUrl());
+                }
+            }
+
+            // Agregar imágenes al ZIP
+            for (Imagen img : publicacionEncontrada.getImagenes()) {
+                File fileDownload = new File(img.getUrl());
+                if (fileDownload.exists()) {
+                    try (InputStream imgInputStream = new FileInputStream(fileDownload)) {
+                        String id = "" + img.getId();
+                        ZipEntry zipEntry = new ZipEntry(id + getFileExtension(img.getUrl()));
+                        zipOut.putNextEntry(zipEntry);
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = imgInputStream.read(buffer)) > 0) {
+                            zipOut.write(buffer, 0, len);
+                        }
+                        zipOut.closeEntry();
+                    } catch (FileNotFoundException e) {
+                        System.err.println("File not found: " + img.getUrl());
+                    } catch (IOException e) {
+                        System.err.println("Error processing file: " + img.getUrl());
+                    }
+                } else {
+                    System.err.println("File does not exist: " + img.getUrl());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Completar el flujo de respuesta
+            facesContext.responseComplete();
+        }
+    }
+
+    private String getFileExtension(String filePath) {
+        if (filePath == null) {
+            return "";
+        }
+        int dotIndex = filePath.lastIndexOf('.');
+        return (dotIndex > 0) ? filePath.substring(dotIndex) : "";
+    }
+*/
+     public void redireccionar(String ruta) {
+        HttpServletRequest request;
+        try {
+            request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(request.getContextPath() + ruta);
+        } catch (Exception e) {
+
+        }
+     }
+    
     public String getDescripcion() {
         return descripcion;
     }
@@ -339,6 +511,38 @@ public class PublicacionController implements Serializable{
 
     public void setUser(UsuarioTO user) {
         this.user = user;
+    }
+
+    public ServicioFavorito getServicioFavorito() {
+        return servicioFavorito;
+    }
+
+    public void setServicioFavorito(ServicioFavorito servicioFavorito) {
+        this.servicioFavorito = servicioFavorito;
+    }
+
+    public StreamedContent getFile() {
+        return file;
+    }
+
+    public void setFile(StreamedContent file) {
+        this.file = file;
+    }
+
+    public ServicioPublicacion getServPublicacion() {
+        return servPublicacion;
+    }
+
+    public void setServPublicacion(ServicioPublicacion servPublicacion) {
+        this.servPublicacion = servPublicacion;
+    }
+
+    public Archivo getArchivo() {
+        return archivo;
+    }
+
+    public void setArchivo(Archivo archivo) {
+        this.archivo = archivo;
     }
 
 }

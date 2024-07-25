@@ -23,9 +23,8 @@ import javax.servlet.http.HttpServletRequest;
 public class LoginController implements Serializable {
 
     private UsuarioTO usuarioTO = new UsuarioTO();
-
-    public LoginController() {
-    }
+    
+    
 
     public void ingresar() {
         ServicioUsuario servicioUsuario = new ServicioUsuario();
@@ -59,5 +58,6 @@ public class LoginController implements Serializable {
     public void setUsuarioTO(UsuarioTO usuarioTO) {
         this.usuarioTO = usuarioTO;
     }
+
 
 }

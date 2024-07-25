@@ -1,18 +1,21 @@
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\controller\UsuarioConverter.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\service\ServicioPublicacion.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\model\Documento.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\service\Servicio.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\model\UsuarioTO.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\controller\RegistroController.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\model\Archivo.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\service\CRUD.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\model\Rol.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\controller\VerPerfilController.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\service\ServicioArchivo.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\controller\PublicacionController.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\model\Publicacion.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\controller\EditarPerfilController.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\service\ServicioUsuario.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\controller\LoginController.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\controller\BusquedaController.java
-C:\Users\josem\OneDrive\Documentos\Proyecto Ingenieria Software 2\Proyecto Pagina\Red_Social_Academica\src\main\java\com\ulatina\model\Imagen.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Archivo.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\FavoritoController.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\ServicioPublicacion.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\UsuarioTO.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Favorito.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\ServicioArchivo.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\CRUD.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\ServicioUsuario.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\PublicacionController.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\RegistroController.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\EditarPerfilController.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Rol.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\UsuarioConverter.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\BusquedaController.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Documento.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\Servicio.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Publicacion.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\LoginController.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Imagen.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\VerPerfilController.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\ServicioFavorito.java

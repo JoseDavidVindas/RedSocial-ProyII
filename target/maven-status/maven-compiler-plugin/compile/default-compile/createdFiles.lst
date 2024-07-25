@@ -1,4 +1,5 @@
 com\ulatina\service\CRUD.class
+com\ulatina\model\Favorito.class
 com\ulatina\model\Imagen.class
 com\ulatina\model\UsuarioTO.class
 com\ulatina\service\ServicioPublicacion.class
@@ -12,7 +13,9 @@ com\ulatina\service\ServicioArchivo.class
 com\ulatina\controller\RegistroController.class
 com\ulatina\controller\BusquedaController.class
 com\ulatina\controller\LoginController.class
+com\ulatina\service\ServicioFavorito.class
 com\ulatina\model\Publicacion.class
+com\ulatina\controller\FavoritoController.class
 com\ulatina\model\Archivo.class
 com\ulatina\model\Rol.class
 com\ulatina\controller\PublicacionController.class

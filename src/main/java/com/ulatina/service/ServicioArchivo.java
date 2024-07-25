@@ -4,20 +4,33 @@
  */
 package com.ulatina.service;
 
-import com.ulatina.model.Archivo;
+
 import com.ulatina.model.Documento;
 import com.ulatina.model.Imagen;
 import com.ulatina.model.Publicacion;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import java.io.InputStream;
+import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.context.FacesContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
  * @author josem
  */
 public class ServicioArchivo extends Servicio{
+     
+    private  StreamedContent file;
     
     public Boolean insertarDocumento(Documento t) {
         PreparedStatement stmt = null;
@@ -143,4 +156,29 @@ public class ServicioArchivo extends Servicio{
         return imagenes;
     }
     
+    public String obtenerUrlArchivo(int archivoId) throws ClassNotFoundException{
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String urlArchivo = null;
+        
+        try {
+           Conectar();
+           
+            String sql = "SELECT url FROM documento WHERE id = ?";
+            stmt = getConexion().prepareStatement(sql);
+            stmt.setInt(1, archivoId);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                urlArchivo = rs.getString("url");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            CerrarResultSet(rs);
+            CerrarStatement(stmt);
+            Desconectar();
+        }
+        return urlArchivo;
+    }
 }

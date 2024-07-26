@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.ulatina.service;
 
 import com.ulatina.model.Archivo;
@@ -31,11 +28,12 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion> {
         try {
             Conectar();
 
-            String sql = "INSERT INTO publicacion (descripcion,usuario_id,numero_favoritos) VALUES (?,?,?)";
+            String sql = "INSERT INTO publicacion (descripcion,usuario_id,numero_favoritos, categoria) VALUES (?,?,?,?)";
             stmt = getConexion().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, t.getDescripcion());
             stmt.setInt(2, t.getUsuario().getId());
             stmt.setInt(3, t.getNumero_favoritos());
+            stmt.setString (4, t.getCategoria());
 
             int filasInsertadas = stmt.executeUpdate();
 
@@ -101,8 +99,8 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion> {
 
         try {
             Conectar();
-            // La consulta SQL se actualiza para usar un límite
-            String query = "SELECT id, descripcion, usuario_id, fecha_publicacion, fecha_actualizacion, numero_favoritos "
+            
+            String query = "SELECT id, descripcion, usuario_id, fecha_publicacion, fecha_actualizacion, numero_favoritos, categoria "
                     + "FROM publicacion "
                     + "ORDER BY fecha_publicacion DESC "
                     + "LIMIT ?";
@@ -119,6 +117,7 @@ public class ServicioPublicacion extends Servicio implements CRUD<Publicacion> {
                 publicacion.setFecha_publicacion(rs.getTimestamp("fecha_publicacion"));
                 publicacion.setFecha_actualizacion(rs.getTimestamp("fecha_actualizacion"));
                 publicacion.setNumero_favoritos(rs.getInt("numero_favoritos"));
+                publicacion.setCategoria(rs.getString("categoria"));
                 publicacion.setDocumentos(servA.buscarDocumento(publicacion));
                 publicacion.setImagenes(servA.buscarImagen(publicacion));
                 publicaciones.add(publicacion);

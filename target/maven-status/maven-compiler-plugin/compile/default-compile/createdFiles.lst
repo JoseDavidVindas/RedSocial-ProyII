@@ -1,5 +1,6 @@
 com\ulatina\service\CRUD.class
 com\ulatina\model\Imagen.class
+com\ulatina\service\ServicioCategoria.class
 com\ulatina\model\UsuarioTO.class
 com\ulatina\service\ServicioPublicacion.class
 com\ulatina\controller\EditarPerfilController.class
@@ -15,4 +16,5 @@ com\ulatina\controller\LoginController.class
 com\ulatina\model\Publicacion.class
 com\ulatina\model\Archivo.class
 com\ulatina\model\Rol.class
+com\ulatina\model\Categoria.class
 com\ulatina\controller\PublicacionController.class

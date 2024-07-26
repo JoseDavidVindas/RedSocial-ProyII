@@ -4,6 +4,7 @@
  */
 package com.ulatina.controller;
 
+import com.ulatina.model.Rol;
 import com.ulatina.model.UsuarioTO;
 import com.ulatina.service.ServicioUsuario;
 import java.io.Serializable;
@@ -27,11 +28,13 @@ public class BusquedaController implements Serializable {
     private ServicioUsuario servU;
     private UsuarioTO usuarioSeleccionado;
     private List<UsuarioTO> resultados;
+    private Rol rol;
 
     public BusquedaController() {
         servU = new ServicioUsuario();
         usuarioSeleccionado = new UsuarioTO();
         resultados = new ArrayList<>();
+        rol = new Rol();
 
     }
 
@@ -50,6 +53,7 @@ public class BusquedaController implements Serializable {
     }
     
     public void redirigirUsuario() {
+        rol = servU.rolPK(usuarioSeleccionado.getRol());
         this.redireccionar("/VerUsuario.xhtml");
        
     }
@@ -87,6 +91,14 @@ public class BusquedaController implements Serializable {
 
     public void setResultados(List<UsuarioTO> resultados) {
         this.resultados = resultados;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
     
     

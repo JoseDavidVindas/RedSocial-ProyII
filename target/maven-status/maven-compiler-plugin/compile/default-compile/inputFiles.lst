@@ -5,6 +5,7 @@ D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\UsuarioTO
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Favorito.java
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\ServicioArchivo.java
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\CRUD.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Categoria.java
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\ServicioUsuario.java
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\PublicacionController.java
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\RegistroController.java
@@ -18,4 +19,5 @@ D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Publicaci
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\LoginController.java
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\model\Imagen.java
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\controller\VerPerfilController.java
+D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\ServicioCategoria.java
 D:\Proyecto2RedSocial\RedSocial-ProyII\src\main\java\com\ulatina\service\ServicioFavorito.java

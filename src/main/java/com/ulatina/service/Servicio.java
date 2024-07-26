@@ -22,6 +22,9 @@ public class Servicio {
     private String sid = "red_social_academica";
     private String usuario = "root";
     private String clave = "adminadmin";
+
+    
+
     
     public void Conectar() throws ClassNotFoundException, SQLException{
         

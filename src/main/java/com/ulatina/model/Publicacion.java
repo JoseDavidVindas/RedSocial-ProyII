@@ -22,6 +22,7 @@ public class Publicacion implements Serializable {
     private int numero_favoritos; 
     private List<Documento> documentos;
     private List<Imagen> imagenes;
+    private String categoria;
     
 
     // Constructor vacío
@@ -30,7 +31,7 @@ public class Publicacion implements Serializable {
 
     // Constructor con parámetros
 
-    public Publicacion(int id, String descripcion, UsuarioTO usuario, Timestamp fecha_publicacion, Timestamp fecha_actualizacion, int numero_favoritos, List<Documento> documentos, List<Imagen> imagenes) {
+    public Publicacion(String categoria, int id, String descripcion, UsuarioTO usuario, Timestamp fecha_publicacion, Timestamp fecha_actualizacion, int numero_favoritos, List<Documento> documentos, List<Imagen> imagenes) {
         this.id = id;
         this.descripcion = descripcion;
         this.usuario = usuario;
@@ -39,6 +40,7 @@ public class Publicacion implements Serializable {
         this.numero_favoritos = numero_favoritos;
         this.documentos = documentos;
         this.imagenes = imagenes;
+        this.categoria = categoria;
     }
 
     
@@ -107,6 +109,17 @@ public class Publicacion implements Serializable {
     public void setImagenes(List<Imagen> imagenes) {
         this.imagenes = imagenes;
     }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+    
+    
+    
 
     
    

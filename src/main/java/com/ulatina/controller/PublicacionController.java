@@ -1,18 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.ulatina.controller;
 
+import com.ulatina.service.ServicioArchivo;
+import com.ulatina.service.ServicioFavorito;
 import java.util.zip.*;
 import com.ulatina.model.Archivo;
 import com.ulatina.model.Documento;
 import com.ulatina.model.Imagen;
 import com.ulatina.model.Publicacion;
 import com.ulatina.model.UsuarioTO;
-import com.ulatina.service.ServicioArchivo;
-import com.ulatina.service.ServicioFavorito;
+import com.ulatina.model.Categoria;
 import com.ulatina.service.ServicioPublicacion;
+import com.ulatina.service.ServicioCategoria;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,6 +60,8 @@ public class PublicacionController implements Serializable {
     private Publicacion publicacion;
     private String descripcion;
     private ServicioPublicacion servPublicacion;
+    private ServicioCategoria servCategoria;
+    private String categoria;
     private List<Publicacion> publicaciones;
     private int currentPage = 0;
     private static final int PAGE_SIZE = 10;
@@ -76,6 +77,8 @@ public class PublicacionController implements Serializable {
     private List<ResponsiveOption> responsiveOptions1;
     private String photo;
     private UsuarioTO user;
+    private List<Categoria> categorias;
+    private String categoriaSeleccionada;
 
     @ManagedProperty(value = "#{loginController}")
     private LoginController loginController;
@@ -85,6 +88,7 @@ public class PublicacionController implements Serializable {
         
         servicioArchivo = new ServicioArchivo();
         servPublicacion = new ServicioPublicacion();
+        servCategoria = new ServicioCategoria();
         publicaciones = new ArrayList<>();
         responsiveOptions1 = new ArrayList<>();
         responsiveOptions1.add(new ResponsiveOption("1024px", 5));
@@ -92,6 +96,7 @@ public class PublicacionController implements Serializable {
         responsiveOptions1.add(new ResponsiveOption("560px", 1));
         photo = "No se cargo la imagen";
         cargarPublicaciones(0);
+        cargarCategorias();
     }
 
     @PostConstruct
@@ -113,6 +118,7 @@ public class PublicacionController implements Serializable {
         files = new ArrayList<>();
         imagenes = new ArrayList<Imagen>();
         documentos = new ArrayList<Documento>();
+        categoriaSeleccionada = null;
     }
 
     protected void copyFile(String fileName, InputStream in, boolean esTemporal) {
@@ -172,6 +178,7 @@ public class PublicacionController implements Serializable {
             publicacion.setUsuario(loginController.getUsuarioTO());
             publicacion.setDocumentos(documentos);
             publicacion.setImagenes(imagenes);
+            publicacion.setCategoria(categoriaSeleccionada);
 
             if (!servPublicacion.insertar(publicacion)) {
                 descripcion = "";
@@ -513,7 +520,42 @@ public class PublicacionController implements Serializable {
         this.user = user;
     }
 
-    public ServicioFavorito getServicioFavorito() {
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+    
+    
+    
+    public List<Categoria> getCategorias() {
+        return categorias;
+    }
+
+    public void setCategorias(List<Categoria> categorias) {
+        this.categorias = categorias;
+    }
+
+    public String getCategoriaSeleccionada() {
+        return categoriaSeleccionada;
+    }
+
+    public void setCategoriaSeleccionada(String categoriaSeleccionada) {
+        this.categoriaSeleccionada = categoriaSeleccionada;
+    }
+
+    private void cargarCategorias() {
+        try {
+            categorias = servCategoria.obtenerTodasCategorias(); // Carga todas las categorías
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+     public ServicioFavorito getServicioFavorito() {
         return servicioFavorito;
     }
 
@@ -543,6 +585,6 @@ public class PublicacionController implements Serializable {
 
     public void setArchivo(Archivo archivo) {
         this.archivo = archivo;
-    }
 
+}
 }
